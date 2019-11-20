@@ -1,0 +1,38 @@
+dist: bionic 
+language: python
+services:
+   - docker
+
+python:
+  - "3.6.9"
+  - "3.7.4"
+  - "3.8"
+
+before_install:
+  - if [[ $TRAVIS_BRANCH == "master" ]]; then echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.7.4" ]]; then docker build -t ahugues/rpojects-boilerplate .; fi
+  - pip install .
+
+install:
+  - pip install ".[test]"
+
+script: 
+  - pytest
+
+after_success: 
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.7.4" ]]; then codecov; fi
+
+deploy:
+  - provider: pypi
+    distributions: "sdist bdist_wheel"
+    username: $PYPI_USERNAME
+    password: $PYPI_PASSWORD
+    on:
+      tags: true
+      branch: master
+      python: "3.7.4"
+  - provider: script
+    script: bash docker_push
+    on:
+      tags: true
+      python: "3.7.4"
