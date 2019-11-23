@@ -19,7 +19,9 @@ setup(
     author_email="me@aurelienhugues.com",
     packages=find_packages(exclude=["tests*"]),
     include_package_data=True,
-    install_requires=[],
+    install_requires=[
+        "click",
+    ],
     test_suite="tests",
     extras_require={
         "dev": [
@@ -40,7 +42,11 @@ setup(
         ]
         },
     python_requires=">=3.6",
-    # entry_points={"console_scripts": ["port-eye=port_eye.main:main"]},
+    entry_points={
+        "console_scripts": [
+            "projects-boilerplate=projects_boilerplate.main:main",
+        ]
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
