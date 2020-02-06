@@ -8,31 +8,19 @@ with open(str(Path(".") / "README.md"), "r", encoding="utf-8") as f:
 
 
 setup(
-    name="projects-boilerplate",
+    name="$project_name",
     version="0.0.0",
-    license="Apache",
-    url="https://github.com/aHugues/projects-boilerplate.git",
-    description="Boilerplate to automatically generate projects",
+    license="$license",
+    url="url_to_your_project",
+    description="Add your description here",
     long_description=README,
     long_description_content_type="text/markdown",
-    author="Aurélien Hugues",
-    author_email="me@aurelienhugues.com",
+    author="Add your name here",
+    author_email="Add your email here",
     packages=find_packages(exclude=["tests*"]),
-    package_data={
-        'projects_boilerplate': [
-            'templates/*.tpl',
-            'templates/**/*.tpl',
-        ],
-    },
-    include_package_data=True,
-    install_requires=[
-        "click",
-    ],
     test_suite="tests",
     extras_require={
         "dev": [
-            "codecov",
-            "black",
             "pylint"
         ],
         "test": [
@@ -43,21 +31,16 @@ setup(
             "pytest-mccabe",
             "pytest-mypy",
             "pytest-pylint",
-            "codecov",
             "tox"
         ]
         },
     python_requires=">=3.6",
     entry_points={
         "console_scripts": [
-            "projects-boilerplate=projects_boilerplate.main:main",
+            "$project_name=$sources_dir.main:main",
         ]
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
