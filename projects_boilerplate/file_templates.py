@@ -15,17 +15,17 @@ from .structs import License
 
 
 class MypyTemplate(SimpleFileTemplate):
-    name = 'mypy'
+    name = 'mypy.ini'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'mypy.ini.tpl'
 
 
 class PylintTemplate(SimpleFileTemplate):
-    name = 'pylint'
+    name = 'pylint.ini'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'pylint.ini.tpl'
 
 
 class ManifestTemplate(EmptyFileTemplate):
-    name = 'manifest'
+    name = 'MANIFEST.in'
 
     @property
     def file_name(self):
@@ -33,36 +33,31 @@ class ManifestTemplate(EmptyFileTemplate):
 
 
 class LicenseTemplate(SimpleFileTemplate):
+    name = 'LICENSE'
     licenses_location = ROOT_TEMPLATES_DIRECTORY / 'licenses'
     file_name = 'LICENSE'
 
 
 class LicenseApacheTemplate(LicenseTemplate):
-    name = 'license-apache'
-
     def __init__(self):
         super().__init__()
         self.template_location = self.licenses_location / 'license_apache.tpl'
 
 
 class LicenseMitTemplate(LicenseTemplate):
-    name = 'license-MIT'
-
     def __init__(self):
         super().__init__()
         self.template_location = self.licenses_location / 'license_mit.tpl'
 
 
 class LicenseGplTemplate(LicenseTemplate):
-    name = 'license-GPL'
-
     def __init__(self):
         super().__init__()
         self.template_location = self.licenses_location / 'license_gpl.tpl'
 
 
 class PytestTemplate(BaseFileTemplate):
-    name = 'pytest'
+    name = 'pytest.ini'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'pytest.ini.tpl'
 
     def __init__(self, project_sources_dir: str):
@@ -75,22 +70,22 @@ class PytestTemplate(BaseFileTemplate):
 
 
 class RequirementsTemplate(SimpleFileTemplate):
-    name = 'requirements'
+    name = 'requirements.txt'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'requirements.txt.tpl'
 
 
 class TestsRequirementsTemplate(SimpleFileTemplate):
-    name = 'tests-requirements'
+    name = 'tests-requirements.txt'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'test-requirements.txt.tpl'
 
 
 class SetupCfgTemplate(SimpleFileTemplate):
-    name = 'setup_cfg'
+    name = 'setup.cfg'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'setup.cfg.tpl'
 
 
 class CoverageIniTemplate(SimpleFileTemplate):
-    name = 'coverage_ini'
+    name = 'coverage.ini'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'coverage.ini.tpl'
 
 
@@ -118,7 +113,7 @@ class SampleTestTemplate(BaseFileTemplate):
 
 
 class SetupPyTemplate(BaseFileTemplate):
-    name = 'setup_py'
+    name = 'setup.py'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'setup.py.tpl'
 
     def __init__(self, project_name: str, project_license: License, project_sources_dir: str):
@@ -137,7 +132,7 @@ class SetupPyTemplate(BaseFileTemplate):
 
 
 class DockerfileTemplate(BaseFileTemplate):
-    name = 'dockerfile'
+    name = 'Dockerfile'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'Dockerfile.tpl'
 
     def __init__(self, project_name: str, project_sources_dir: str):
@@ -154,7 +149,7 @@ class DockerfileTemplate(BaseFileTemplate):
 
 
 class PythonReadmeTemplate(BaseFileTemplate):
-    name = 'README'
+    name = 'README.md'
     template_location = ROOT_TEMPLATES_DIRECTORY / 'README.md.tpl'
 
     def __init__(self, project_name: str):
@@ -167,7 +162,7 @@ class PythonReadmeTemplate(BaseFileTemplate):
 
 
 class InitTemplate(EmptyFileTemplate):
-    name = '__init__'
+    name = '__init__.py'
 
     @property
     def file_name(self):

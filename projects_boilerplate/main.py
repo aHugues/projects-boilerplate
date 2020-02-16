@@ -7,6 +7,8 @@ from typing import Type
 
 import click
 
+from pyfiglet import Figlet
+
 from .file_templates import License
 from .python_template import (
     BaseProjectTemplate,
@@ -32,6 +34,16 @@ def select_license(name_param: str) -> License:
     raise ValueError(f'Invalid license name {name_param}')
 
 
+def print_header():
+    figlet = Figlet(font='slant')
+    print(figlet.renderText('Projects-'))
+    print(figlet.renderText('Boilerplate'))
+
+
+def print_intro():
+    print('Parsing arguments...\n\n')
+
+
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.argument('name')
 @click.option(
@@ -52,8 +64,7 @@ def select_license(name_param: str) -> License:
     help='Add support for Dockerisation to destination project',  # pylint: disable=missing-function-docstring
 )
 def main(name, template, license_name, output, docker):  # pylint: disable=missing-function-docstring
-    print("Projects boilerplate")
-    print("#"*15, '\n\n')
+    print_header()
 
     template_class = select_project_template_class(template)
     project_license = select_license(license_name)
