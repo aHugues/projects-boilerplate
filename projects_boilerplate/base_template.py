@@ -8,9 +8,15 @@ import os
 from pathlib import Path
 from typing import List
 
+from termcolor import (
+    colored,
+    cprint,
+)
+
 from .structs import License
 
 ROOT_TEMPLATES_DIRECTORY = Path(os.path.abspath(__file__)).parent / 'templates'
+SUCCESS = f"[{colored('🗸', color='green')}]"
 
 
 class BaseFileTemplate(abc.ABC):
@@ -31,6 +37,10 @@ class BaseFileTemplate(abc.ABC):
     @property
     def file_name(self):
         return self.template_location.stem
+
+    @property
+    def full_name(self) -> str:
+        return f'{self._subdir}/{self.name}'
 
     def read_base_content(self) -> str:
         """
@@ -92,8 +102,15 @@ class BaseProjectTemplate(abc.ABC):
         raise NotImplementedError()
 
     def build(self):
+        cprint('\nBuilding directories', attrs=['bold', 'underline'])
         self._destination_dir.mkdir(exist_ok=True)
         for destination_dir in self.dirs:
             self.build_dir(destination_dir)
+            print(f'{SUCCESS} {destination_dir}')
+
+        cprint('\nBuilding file templates', attrs=['bold', 'underline'])
         for template in self.file_templates:
             template.build_template(self._destination_dir)
+            print(f'{SUCCESS} {template.full_name}')
+
+        cprint('\nProject successfully built!', color='green')

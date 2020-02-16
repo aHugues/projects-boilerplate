@@ -27,6 +27,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "click",
+        "termcolor",
+        "pyfiglet",
     ],
     test_suite="tests",
     extras_require={

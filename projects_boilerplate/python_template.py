@@ -4,6 +4,11 @@ Template for a simple Python project
 
 from pathlib import Path
 
+from termcolor import (
+    colored,
+    cprint,
+)
+
 from .base_template import BaseProjectTemplate
 from .file_templates import (
     CoverageIniTemplate,
@@ -41,21 +46,27 @@ class PythonProjectTemplate(BaseProjectTemplate):
         self._project_sources_dir = project_name.replace('-', '_')
 
         self.file_templates = [
+            PythonReadmeTemplate(self._project_name),
+            self.get_license_template(),
+            SetupPyTemplate(self._project_name, self._project_license, self._project_sources_dir),
+            SetupCfgTemplate(),
+            ManifestTemplate(),
+            RequirementsTemplate(),
+            TestsRequirementsTemplate(),
+            PytestTemplate(self._project_sources_dir),
+            PylintTemplate(),
             CoverageIniTemplate(),
             MypyTemplate(),
-            PylintTemplate(),
-            ManifestTemplate(),
-            PytestTemplate(self._project_sources_dir),
-            self.get_license_template(),
-            RequirementsTemplate(),
-            SetupCfgTemplate(),
-            SetupPyTemplate(self._project_name, self._project_license, self._project_sources_dir),
-            InitTemplate('tests'),
-            MainFileTemplate(self._project_sources_dir),
+        ]
+
+        if self._docker_enabled:
+            self.file_templates.append(DockerfileTemplate(self._project_name, self._project_sources_dir))
+
+        self.file_templates += [
             InitTemplate(self._project_sources_dir),
-            PythonReadmeTemplate(self._project_name),
-            TestsRequirementsTemplate(),
+            MainFileTemplate(self._project_sources_dir),
             SampleFileTemplate(self._project_sources_dir),
+            InitTemplate('tests'),
             SampleTestTemplate(self._project_sources_dir, 'tests'),
         ]
 
@@ -64,13 +75,13 @@ class PythonProjectTemplate(BaseProjectTemplate):
             self._project_sources_dir,
         ]
 
-        if self._docker_enabled:
-            self.file_templates.append(DockerfileTemplate(self._project_name, self._project_sources_dir))
-
     def describe(self):
-        print(f'Python project template\nPackage name: {self._project_name}')
-        print(f'Project is running license {self._project_license.value}')
-        print(f"Docker support is {'enabled' if self._docker_enabled else 'disabled'}")
+        project_type = colored('Python project', attrs=['bold'])
+        project_name_colored = colored(self._project_name, 'blue', attrs=['bold'])
+        destination_dir_colored = colored(str(self._destination_dir), 'blue', attrs=['bold', 'underline'])
+        cprint(f'Building {project_type} {project_name_colored} to directory {destination_dir_colored}')
+        print(f"Project is running license {colored(self._project_license.value, attrs=['bold'])}")
+        print(f"Docker support is {colored('enabled' if self._docker_enabled else 'disabled', attrs=['bold'])}")
 
     def get_license_template(self) -> LicenseTemplate:
         mapping = {
