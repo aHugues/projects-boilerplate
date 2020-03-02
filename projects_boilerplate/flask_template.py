@@ -40,8 +40,8 @@ class FlaskProjectTemplate(BaseProjectTemplate):
     """
     name = 'flask'
 
-    def __init__(self, project_name: str, project_license: License, docker: bool, destination_dir: Path):
-        super().__init__(project_name, project_license, docker, destination_dir)
+    def __init__(self, project_name: str, project_license: License, docker: bool, destination_dir: Path, dry_run=False):
+        super().__init__(project_name, project_license, docker, destination_dir, dry_run)
 
         self._project_sources_dir = project_name.replace('-', '_')
 
@@ -85,6 +85,9 @@ class FlaskProjectTemplate(BaseProjectTemplate):
         cprint(f'Building {project_type} {project_name_colored} to directory {destination_dir_colored}')
         print(f"Project is running license {colored(self._project_license.value, attrs=['bold'])}")
         print(f"Docker support is {colored('enabled' if self._docker_enabled else 'disabled', attrs=['bold'])}")
+
+        if self._dry_run:
+            cprint('\nWarning: Dry-run is enabled, nothing will be done', color='yellow')
 
     def get_license_template(self) -> LicenseTemplate:
         mapping = {

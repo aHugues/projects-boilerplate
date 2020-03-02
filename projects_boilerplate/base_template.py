@@ -93,11 +93,12 @@ class BaseProjectTemplate(abc.ABC):
     file_templates: List[BaseFileTemplate] = []
     dirs: List[str] = []
 
-    def __init__(self, project_name: str, project_license: License, docker: bool, destination_dir: Path):
+    def __init__(self, project_name: str, project_license: License, docker: bool, destination_dir: Path, dry_run: bool):
         self._project_name = project_name
         self._project_license = project_license
         self._docker_enabled = docker
         self._destination_dir = destination_dir
+        self._dry_run = dry_run
 
     def build_dir(self, dir_name: str):
         dir_full_path = self._destination_dir / dir_name
@@ -109,14 +110,17 @@ class BaseProjectTemplate(abc.ABC):
 
     def build(self):
         cprint('\nBuilding directories', attrs=['bold', 'underline'])
-        self._destination_dir.mkdir(exist_ok=True)
+        if not self._dry_run:
+            self._destination_dir.mkdir(exist_ok=True)
         for destination_dir in self.dirs:
-            self.build_dir(destination_dir)
+            if not self._dry_run:
+                self.build_dir(destination_dir)
             print(f'{SUCCESS} {destination_dir}')
 
         cprint('\nBuilding file templates', attrs=['bold', 'underline'])
         for template in self.file_templates:
-            template.build_template(self._destination_dir)
+            if not self._dry_run:
+                template.build_template(self._destination_dir)
             print(f'{SUCCESS} {template.full_name}')
 
         cprint('\nProject successfully built!', color='green')
