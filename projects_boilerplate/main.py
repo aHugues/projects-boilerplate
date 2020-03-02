@@ -9,11 +9,10 @@ import click
 
 from pyfiglet import Figlet
 
+from .base_template import BaseProjectTemplate
 from .file_templates import License
-from .python_template import (
-    BaseProjectTemplate,
-    PythonProjectTemplate,
-)
+from .flask_template import FlaskProjectTemplate
+from .python_template import PythonProjectTemplate
 
 # Allow using the -h argument to call the help function
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -21,6 +20,7 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 def select_project_template_class(key: str) -> Type[BaseProjectTemplate]:
     mapping = {
+        'flask': FlaskProjectTemplate,
         'python': PythonProjectTemplate,
     }
     return mapping[key.lower()]

@@ -6,7 +6,10 @@ import abc
 import os
 
 from pathlib import Path
-from typing import List
+from typing import (
+    List,
+    Optional,
+)
 
 from termcolor import (
     colored,
@@ -30,8 +33,11 @@ class BaseFileTemplate(abc.ABC):
     def __init__(self, subdir: str = '.'):
         self._subdir = subdir
 
-    def _copy_to_destination(self, content: str, destination: Path):
-        destination_complete_path = destination / self._subdir / self.file_name
+    def _copy_to_destination(self, content: str, destination: Path, destination_filename: Optional[str] = None):
+        if destination_filename is None:
+            destination_complete_path = destination / self._subdir / self.file_name
+        else:
+            destination_complete_path = destination / self._subdir / destination_filename
         destination_complete_path.write_text(content)
 
     @property

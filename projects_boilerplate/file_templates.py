@@ -131,9 +131,9 @@ class SetupPyTemplate(BaseFileTemplate):
         )
 
 
-class DockerfileTemplate(BaseFileTemplate):
+class PythonDockerfileTemplate(BaseFileTemplate):
     name = 'Dockerfile'
-    template_location = ROOT_TEMPLATES_DIRECTORY / 'Dockerfile.tpl'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'python_Dockerfile.tpl'
 
     def __init__(self, project_name: str, project_sources_dir: str):
         super().__init__()
@@ -145,12 +145,102 @@ class DockerfileTemplate(BaseFileTemplate):
         self._copy_to_destination(template.substitute(
             project_name=self._project_name,
             project_sources_dir=self._project_sources_dir
+        ), destination, 'Dockerfile')
+
+
+class FlaskDockerfileTemplate(BaseFileTemplate):
+    name = 'Dockerfile'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'flask_Dockerfile.tpl'
+
+    def __init__(self, project_sources_dir: str):
+        super().__init__()
+        self._project_sources_dir = project_sources_dir
+
+    def build_template(self, destination: Path):
+        template = Template(self.read_base_content())
+        self._copy_to_destination(template.substitute(
+            project_sources_dir=self._project_sources_dir
+        ), destination, 'Dockerfile')
+
+
+class FlaskAppTemplate(BaseFileTemplate):
+    name = 'app.py'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'flask_app.py.tpl'
+
+    def __init__(self, project_sources_dir: str):
+        super().__init__()
+        self._project_sources_dir = project_sources_dir
+
+    def build_template(self, destination: Path):
+        template = Template(self.read_base_content())
+        self._copy_to_destination(template.substitute(
+            project_sources_dir=self._project_sources_dir
+        ), destination, 'app.py')
+
+
+class WsgiTemplate(BaseFileTemplate):
+    name = 'wsgi.py'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'wsgi.py.tpl'
+
+    def __init__(self, project_sources_dir: str):
+        super().__init__()
+        self._project_sources_dir = project_sources_dir
+
+    def build_template(self, destination: Path):
+        template = Template(self.read_base_content())
+        self._copy_to_destination(template.substitute(
+            project_sources_dir=self._project_sources_dir
         ), destination)
+
+
+class FlaskInitTemplate(BaseFileTemplate):
+    name = 'app.py'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'flask_init.py.tpl'
+
+    def __init__(self, subdir: str):
+        super().__init__(subdir=subdir)
+
+    def build_template(self, destination: Path):
+        self._copy_to_destination(self.read_base_content(), destination, '__init__.py')
+
+
+class FlaskRequirementsTemplate(BaseFileTemplate):
+    name = 'requirements.txt'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'flask_requirements.txt.tpl'
+
+    def build_template(self, destination: Path):
+        self._copy_to_destination(self.read_base_content(), destination, 'requirements.txt')
+
+
+class FlaskTestRequirementsTemplate(BaseFileTemplate):
+    name = 'test-requirements.txt'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'flask_test_requirements.txt.tpl'
+
+    def build_template(self, destination: Path):
+        self._copy_to_destination(self.read_base_content(), destination, 'test-requirements.txt')
+
+
+class FlaskTestAppTemplate(BaseFileTemplate):
+    name = 'test_app.py'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'flask_test_app.py.tpl'
+
+    def __init__(self, project_sources_dir: str, subdir: str):
+        super().__init__(subdir=subdir)
+        self._project_sources_dir = project_sources_dir
+
+    def build_template(self, destination: Path):
+        content = Template(self.read_base_content()).substitute(project_sources_dir=self._project_sources_dir)
+        self._copy_to_destination(content, destination, 'test_app.py')
+
+
+class FlaskViewsTemplate(SimpleFileTemplate):
+    name = 'views.py'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'views.py.tpl'
 
 
 class PythonReadmeTemplate(BaseFileTemplate):
     name = 'README.md'
-    template_location = ROOT_TEMPLATES_DIRECTORY / 'README.md.tpl'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'python_README.md.tpl'
 
     def __init__(self, project_name: str):
         super().__init__()
@@ -158,7 +248,20 @@ class PythonReadmeTemplate(BaseFileTemplate):
 
     def build_template(self, destination: Path):
         template = Template(self.read_base_content())
-        self._copy_to_destination(template.substitute(project_name=self._project_name), destination)
+        self._copy_to_destination(template.substitute(project_name=self._project_name), destination, 'README.md')
+
+
+class FlaskReadmeTemplate(BaseFileTemplate):
+    name = 'README.md'
+    template_location = ROOT_TEMPLATES_DIRECTORY / 'flask_README.md.tpl'
+
+    def __init__(self, project_name: str):
+        super().__init__()
+        self._project_name = project_name
+
+    def build_template(self, destination: Path):
+        template = Template(self.read_base_content())
+        self._copy_to_destination(template.substitute(project_name=self._project_name), destination, 'README.md')
 
 
 class InitTemplate(EmptyFileTemplate):
