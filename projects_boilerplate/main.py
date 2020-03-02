@@ -4,7 +4,10 @@ Entrypoint for the boilerplate
 
 from argparse import ArgumentParser
 from pathlib import Path
-from typing import Type
+from typing import (
+    Dict,
+    Type,
+)
 
 from pyfiglet import Figlet
 
@@ -15,7 +18,7 @@ from .python_template import PythonProjectTemplate
 
 
 def select_project_template_class(key: str) -> Type[BaseProjectTemplate]:
-    mapping = {
+    mapping: Dict[str, Type[BaseProjectTemplate]] = {
         'flask': FlaskProjectTemplate,
         'python': PythonProjectTemplate,
     }
@@ -60,15 +63,19 @@ def main():  # pylint: disable=missing-function-docstring
         help='Directory in which output will be stored',
     )
     parser.add_argument(
-        '--docker', '-d', action='store_true',
+        '--docker', action='store_true',
         help='Add support for Docker to destination project',
+    )
+    parser.add_argument(
+        '--dry-run', '-d', action='store_true',
+        help='Describe the package without actually building it',
     )
 
     args = parser.parse_args()
 
     template_class = select_project_template_class(args.template)
     project_license = select_license(args.license_name)
-    template = template_class(args.name, project_license, args.docker, args.output)
+    template = template_class(args.name, project_license, args.docker, args.output, args.dry_run)
 
     template.describe()
     template.build()
