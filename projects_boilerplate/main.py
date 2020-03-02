@@ -2,10 +2,9 @@
 Entrypoint for the boilerplate
 """
 
+from argparse import ArgumentParser
 from pathlib import Path
 from typing import Type
-
-import click
 
 from pyfiglet import Figlet
 
@@ -13,9 +12,6 @@ from .base_template import BaseProjectTemplate
 from .file_templates import License
 from .flask_template import FlaskProjectTemplate
 from .python_template import PythonProjectTemplate
-
-# Allow using the -h argument to call the help function
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 def select_project_template_class(key: str) -> Type[BaseProjectTemplate]:
@@ -44,32 +40,35 @@ def print_intro():
     print('Parsing arguments...\n\n')
 
 
-@click.command(context_settings=CONTEXT_SETTINGS)
-@click.argument('name')
-@click.option(
-    '--template', '-t',
-    help='Project template to choose from', required=True,
-    type=click.Choice(['python', 'flask'], case_sensitive=False))
-@click.option(
-    '--license_name', '-l',
-    help='License to choose from', default='MIT',
-    type=click.Choice(['MIT', 'GPL', 'Apache'], case_sensitive=False))
-@click.option(
-    '--output', '-o',
-    help='Directory in which output will be stored',
-    type=click.Path(exists=False), default='.'
-)
-@click.option(
-    '--docker', '-d', is_flag=True,
-    help='Add support for Dockerisation to destination project',  # pylint: disable=missing-function-docstring
-)
-def main(name, template, license_name, output, docker):  # pylint: disable=missing-function-docstring
+def main():  # pylint: disable=missing-function-docstring
     print_header()
 
-    template_class = select_project_template_class(template)
-    project_license = select_license(license_name)
-    output = Path(output)
-    template = template_class(name, project_license, docker, output)
+    parser = ArgumentParser()
+    parser.add_argument(
+        'name', type=str, help='Name of the project'
+    )
+    parser.add_argument(
+        '--template', '-t', type=str, choices=['python', 'flask'], required=True,
+        help='Project template to choose from',
+    )
+    parser.add_argument(
+        '--license', '-l', type=str, choices=['MIT', 'GPL', 'Apache'], dest='license_name',
+        help='License to choose from', default='MIT',
+    )
+    parser.add_argument(
+        '--output', '-o', type=Path, default=Path('.'),
+        help='Directory in which output will be stored',
+    )
+    parser.add_argument(
+        '--docker', '-d', action='store_true',
+        help='Add support for Docker to destination project',
+    )
+
+    args = parser.parse_args()
+
+    template_class = select_project_template_class(args.template)
+    project_license = select_license(args.license_name)
+    template = template_class(args.name, project_license, args.docker, args.output)
 
     template.describe()
     template.build()
