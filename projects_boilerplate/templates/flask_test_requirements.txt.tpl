@@ -1,0 +1,9 @@
+pytest
+pylint
+pytest-cov
+pytest-pycodestyle
+pytest-isort
+pytest-mccabe
+pytest-mypy
+pytest-pylint
+pytest-flask
