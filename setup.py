@@ -28,6 +28,7 @@ setup(
     install_requires=[
         "termcolor",
         "pyfiglet",
+        "tabulate",
     ],
     test_suite="tests",
     extras_require={
