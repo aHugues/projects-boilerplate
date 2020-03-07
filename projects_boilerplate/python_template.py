@@ -4,6 +4,7 @@ Template for a simple Python project
 
 from pathlib import Path
 
+from tabulate import tabulate
 from termcolor import (
     colored,
     cprint,
@@ -76,13 +77,14 @@ class PythonProjectTemplate(BaseProjectTemplate):
         ]
 
     def describe(self):
-        project_type = colored('Python project', attrs=['bold'])
-        project_name_colored = colored(self._project_name, 'blue', attrs=['bold'])
-        destination_dir_colored = colored(str(self._destination_dir), 'blue', attrs=['bold', 'underline'])
-        cprint(f'Building {project_type} {project_name_colored} to directory {destination_dir_colored}')
-        print(f"Project is running license {colored(self._project_license.value, attrs=['bold'])}")
-        print(f"Docker support is {colored('enabled' if self._docker_enabled else 'disabled', attrs=['bold'])}")
-
+        description_infos = [
+            ['Project name', colored(self._project_name, 'blue', attrs=['bold'])],
+            ['Project template', colored('Python project', attrs=['bold'])],
+            ['Output directory', colored(str(self._destination_dir), 'blue', attrs=['bold', 'underline'])],
+            ['License', self._project_license.value],
+            ['Docker support', 'enabled' if self._docker_enabled else 'disabled']
+        ]
+        print(tabulate(description_infos, tablefmt="psql"))
         if self._dry_run:
             cprint('\nWarning: Dry-run is enabled, nothing will be done', color='yellow')
 
