@@ -33,17 +33,17 @@ def select_license(name_param: str) -> License:
     raise ValueError(f'Invalid license name {name_param}')
 
 
-def print_header():
+def print_header():  # pragma: no cover
     figlet = Figlet(font='slant')
     print(figlet.renderText('Projects-'))
     print(figlet.renderText('Boilerplate'))
 
 
-def print_intro():
+def print_intro():  # pragma: no cover
     print('Parsing arguments...\n\n')
 
 
-def main():  # pylint: disable=missing-function-docstring
+def main():  # pragma: no cover  # pylint: disable=missing-function-docstring
     print_header()
 
     parser = ArgumentParser()
